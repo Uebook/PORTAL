@@ -6,19 +6,20 @@ import api from '@/lib/api';
 import DataTable from '@/components/admin/DataTable';
 import {
        Calendar, CheckCircle, XCircle, Clock,
-       Building2, Map, Bus, CarFront, Download
+       Building2, Download
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-export default function MasterBookingsPage() {
+export default function HotelsBookingsPage() {
        const queryClient = useQueryClient();
        const [search, setSearch] = useState('');
 
        const { data: bookings = [], isLoading } = useQuery({
-              queryKey: ['global-bookings'],
+              queryKey: ['hotels-bookings'],
               queryFn: async () => {
                      const res = await api.get('/bookings/admin/all');
-                     return res.data;
+                     // Note: In real app, endpoint should be filtered by vertical
+                     return res.data.filter((b: any) => b.hotelId);
               }
        });
 
@@ -27,24 +28,15 @@ export default function MasterBookingsPage() {
                      return api.patch(`/bookings/${id}/status`, { status });
               },
               onSuccess: () => {
-                     queryClient.invalidateQueries({ queryKey: ['global-bookings'] });
+                     queryClient.invalidateQueries({ queryKey: ['hotels-bookings'] });
                      toast.success('Booking status updated successfully');
               }
        });
 
        const filteredBookings = bookings.filter((b: any) =>
               (b.guestName || '').toLowerCase().includes(search.toLowerCase()) ||
-              (b.bookingReference || '').toLowerCase().includes(search.toLowerCase()) ||
-              (b.guestEmail || '').toLowerCase().includes(search.toLowerCase())
+              (b.bookingReference || '').toLowerCase().includes(search.toLowerCase())
        );
-
-       const getVerticalDetails = (booking: any) => {
-              if (booking.hotel) return { type: 'HOTEL', icon: Building2, color: 'text-indigo-500', bg: 'bg-indigo-50', name: booking.hotel.name };
-              if (booking.tourPartner) return { type: 'TOUR', icon: Map, color: 'text-emerald-500', bg: 'bg-emerald-50', name: booking.tourPartner.companyName };
-              if (booking.busVendor) return { type: 'BUS', icon: Bus, color: 'text-amber-500', bg: 'bg-amber-50', name: booking.busVendor.companyName };
-              if (booking.cabVendor) return { type: 'CAB', icon: CarFront, color: 'text-rose-500', bg: 'bg-rose-50', name: booking.cabVendor.companyName };
-              return { type: 'UNKNOWN', icon: Calendar, color: 'text-slate-500', bg: 'bg-slate-50', name: 'Unknown Vendor' };
-       };
 
        const columns = [
               {
@@ -54,31 +46,27 @@ export default function MasterBookingsPage() {
                             <div>
                                    <div className="font-black text-slate-900 text-sm">{booking.guestName}</div>
                                    <div className="text-xs text-slate-500 font-bold mt-1">{booking.guestEmail}</div>
-                                   <div className="text-[10px] text-indigo-500 font-black uppercase tracking-widest mt-1">ID: {booking.bookingReference}</div>
+                                   <div className="text-[10px] text-indigo-500 font-black uppercase tracking-widest mt-1">Ref: {booking.bookingReference}</div>
                             </div>
                      )
               },
               {
-                     header: 'Vertical / Vendor',
+                     header: 'Property Details',
                      accessor: 'vendor',
-                     render: (booking: any) => {
-                            const details = getVerticalDetails(booking);
-                            const Icon = details.icon;
-                            return (
-                                   <div className="flex items-center gap-3">
-                                          <div className={`p-2 rounded-lg ${details.bg} ${details.color}`}>
-                                                 <Icon size={16} />
-                                          </div>
-                                          <div>
-                                                 <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{details.type}</div>
-                                                 <div className="text-xs font-bold text-slate-700 truncate max-w-[150px]">{details.name}</div>
-                                          </div>
+                     render: (booking: any) => (
+                            <div className="flex items-center gap-3">
+                                   <div className="p-2 rounded-lg bg-indigo-50 text-indigo-500">
+                                          <Building2 size={16} />
                                    </div>
-                            )
-                     }
+                                   <div>
+                                          <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">HOTEL</div>
+                                          <div className="text-xs font-bold text-slate-700 truncate max-w-[150px]">{booking.hotel?.name || 'Unknown Property'}</div>
+                                   </div>
+                            </div>
+                     )
               },
               {
-                     header: 'Dates',
+                     header: 'Stay Dates',
                      accessor: 'dates',
                      render: (booking: any) => (
                             <div>
@@ -88,7 +76,7 @@ export default function MasterBookingsPage() {
                      )
               },
               {
-                     header: 'Amount',
+                     header: 'Booking Value',
                      accessor: 'totalAmount',
                      render: (booking: any) => (
                             <div className="text-sm font-black text-slate-900">${booking.totalAmount}</div>
@@ -127,7 +115,7 @@ export default function MasterBookingsPage() {
 
        const headerAction = (
               <button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all shadow-xl shadow-indigo-600/20 active:scale-95 group">
-                     <Download size={14} className="group-hover:translate-y-0.5 transition-transform" /> Export
+                     <Download size={14} className="group-hover:translate-y-0.5 transition-transform" /> Export Report
               </button>
        );
 
@@ -139,15 +127,15 @@ export default function MasterBookingsPage() {
                                           <div className="p-2 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-600/20">
                                                  <Calendar size={20} />
                                           </div>
-                                          <span className="text-slate-400 font-black uppercase tracking-[0.2em] text-[10px]">Operations Core</span>
+                                          <span className="text-slate-400 font-black uppercase tracking-[0.2em] text-[10px]">Hotel Operations</span>
                                    </div>
-                                   <h1 className="text-4xl font-black text-slate-900 tracking-tight">Master Bookings List</h1>
-                                   <p className="text-slate-400 font-bold mt-2">Global oversight of all reservations across all verticals</p>
+                                   <h1 className="text-4xl font-black text-slate-900 tracking-tight">Bookings & Reservations</h1>
+                                   <p className="text-slate-400 font-bold mt-2">Manage all incoming bookings for hotel partners</p>
                             </div>
                      </header>
 
                      <DataTable 
-                            title="Total Reservations"
+                            title="Recent Reservations"
                             description={`${filteredBookings.length} records found`}
                             columns={columns}
                             data={filteredBookings}
