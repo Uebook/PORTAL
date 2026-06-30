@@ -34,6 +34,9 @@ export class Booking {
   @Column({ nullable: true })
   guestContact: string;
 
+  @Column({ nullable: true })
+  userId: string;
+
   @Column({ type: 'date' })
   startDate: string;
 

@@ -40,6 +40,10 @@ export class CreateBookingDto {
   gstNumber?: string;
 
   @IsString()
+  @IsOptional()
+  userId?: string;
+
+  @IsString()
   @IsNotEmpty()
   roomTypeId: string;
 }

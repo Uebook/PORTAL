@@ -1105,6 +1105,7 @@ export default function CheckoutFlow({ hotel, room, entity, searchParams, onBack
                         hotelId: hotel?.id || hotel?.hotelId || '',
                         gstCompany: gstEnabled ? gstCompany : undefined,
                         gstNumber: gstEnabled ? gstNumber : undefined,
+                        userId: user?.id,
                       });
                       
                       if (window.location.hostname === 'localhost') {

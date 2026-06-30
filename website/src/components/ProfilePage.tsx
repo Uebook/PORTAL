@@ -51,14 +51,14 @@ export default function ProfilePage({ user, onLogout, onBack, onSelectHotel }: P
   });
 
   useEffect(() => {
-    if (activeTab === 'history' && user?.email) {
+    if (activeTab === 'history' && (user?.email || user?.id)) {
       setIsLoadingBookings(true);
-      fetchBookingsByEmail(user.email)
+      fetchBookingsByEmail(user.id || user.email)
         .then(data => setBookings(data))
         .catch(console.error)
         .finally(() => setIsLoadingBookings(false));
     }
-  }, [activeTab, user?.email]);
+  }, [activeTab, user?.email, user?.id]);
 
   useEffect(() => {
     if (activeTab === 'wishlist') {

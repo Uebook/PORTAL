@@ -93,6 +93,7 @@ export class BookingService implements OnModuleInit {
         bookingReference: ref,
         gstCompany: createDto.gstCompany,
         gstNumber: createDto.gstNumber,
+        userId: createDto.userId,
       });
 
       const saved = await queryRunner.manager.save(booking);
@@ -139,9 +140,12 @@ export class BookingService implements OnModuleInit {
     }
   }
 
-  async findAllByEmail(guestEmail: string): Promise<Booking[]> {
+  async findAllByEmail(identifier: string): Promise<Booking[]> {
     return this.bookingRepository.find({
-      where: { guestEmail },
+      where: [
+        { guestEmail: identifier },
+        { userId: identifier }
+      ],
       relations: ['roomType', 'hotel'],
       order: { createdAt: 'DESC' },
     });
