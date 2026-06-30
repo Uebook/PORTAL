@@ -89,7 +89,7 @@ export class BookingService implements OnModuleInit {
         totalAmount: createDto.totalAmount,
         roomTypeId: createDto.roomTypeId,
         hotelId: createDto.hotelId,
-        status: BookingStatus.PENDING,
+        status: BookingStatus.CONFIRMED,
         bookingReference: ref,
         gstCompany: createDto.gstCompany,
         gstNumber: createDto.gstNumber,
