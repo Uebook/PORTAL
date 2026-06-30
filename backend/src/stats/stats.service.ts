@@ -145,6 +145,10 @@ export class StatsService {
       occupancy: number;
     }[] = [];
 
+    // Get actual total room capacity of the hotel from the DB
+    const roomTypes = await this.roomTypeRepository.find({ where: { hotelId } });
+    const totalCapacity = roomTypes.reduce((sum, rt) => sum + (Number(rt.totalRooms) || 0), 0) || 10;
+
     for (let i = days - 1; i >= 0; i--) {
       const day = subDays(now, i);
       const dayStr = format(day, 'yyyy-MM-dd');
@@ -174,7 +178,7 @@ export class StatsService {
             b.status,
           ),
       ).length;
-      const occupancy = Math.min(100, Math.round((activeDay / 10) * 100)); // assumes ~10 rooms total
+      const occupancy = Math.min(100, Math.round((activeDay / totalCapacity) * 100));
 
       dailyData.push({
         date: dateLabel,
