@@ -177,16 +177,38 @@ export default function PaymentsDashboard() {
             <div className="p-6 space-y-6 animate-fadeIn">
 
                 {/* KPI Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="glass-card p-6 border-l-4 border-l-blue-500 relative overflow-hidden group">
                         <div className="absolute right-[-20px] top-[-20px] bg-blue-500/10 w-32 h-32 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"></div>
                         <div className="flex items-center gap-2 text-[hsl(var(--muted-foreground))] mb-2 font-bold text-sm">
-                            <Wallet size={18} /> TOTAL EARNINGS
+                            <Wallet size={18} /> GROSS EARNINGS
                         </div>
-                        <div className="text-4xl font-bold text-[hsl(var(--foreground))]">
+                        <div className="text-3xl font-bold text-[hsl(var(--foreground))]">
                             ₹{balances.totalEarnings.toLocaleString()}
                         </div>
-                        <p className="text-xs text-[hsl(var(--muted-foreground))] mt-2">All-time revenue generated</p>
+                        <p className="text-xs text-[hsl(var(--muted-foreground))] mt-2">Total gross booking value</p>
+                    </div>
+
+                    <div className="glass-card p-6 border-l-4 border-l-red-500 relative overflow-hidden group">
+                        <div className="absolute right-[-20px] top-[-20px] bg-red-500/10 w-32 h-32 rounded-full blur-2xl group-hover:bg-red-500/20 transition-all"></div>
+                        <div className="flex items-center gap-2 text-[hsl(var(--muted-foreground))] mb-2 font-bold text-sm">
+                            <AlertCircle size={18} /> COMMISSION (10% + GST)
+                        </div>
+                        <div className="text-3xl font-bold text-red-500">
+                            ₹{(Math.round(balances.totalEarnings * 0.118)).toLocaleString()}
+                        </div>
+                        <p className="text-xs text-[hsl(var(--muted-foreground))] mt-2">10% Fee + 18% GST on fee</p>
+                    </div>
+
+                    <div className="glass-card p-6 border-l-4 border-l-indigo-500 relative overflow-hidden group">
+                        <div className="absolute right-[-20px] top-[-20px] bg-indigo-500/10 w-32 h-32 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all"></div>
+                        <div className="flex items-center gap-2 text-[hsl(var(--muted-foreground))] mb-2 font-bold text-sm">
+                            <Receipt size={18} /> NET EARNINGS
+                        </div>
+                        <div className="text-3xl font-bold text-indigo-500">
+                            ₹{(balances.totalEarnings - Math.round(balances.totalEarnings * 0.118)).toLocaleString()}
+                        </div>
+                        <p className="text-xs text-[hsl(var(--muted-foreground))] mt-2">Gross minus commission & tax</p>
                     </div>
 
                     <div className="glass-card p-6 border-l-4 border-l-green-500 relative overflow-hidden group">
@@ -194,10 +216,13 @@ export default function PaymentsDashboard() {
                         <div className="flex items-center gap-2 text-[hsl(var(--muted-foreground))] mb-2 font-bold text-sm">
                             <DollarSign size={18} /> AVAILABLE BALANCE
                         </div>
-                        <div className="text-4xl font-bold text-[hsl(var(--foreground))]">
-                            ₹{balances.availableBalance.toLocaleString()}
+                        <div className="text-3xl font-bold text-[hsl(var(--foreground))]">
+                            ₹{Math.max(0, balances.availableBalance - Math.round(balances.totalEarnings * 0.118)).toLocaleString()}
                         </div>
-                        <div className="mt-4">
+                        <p className="text-[10px] text-[hsl(var(--muted-foreground))] mt-1.5 font-bold uppercase tracking-wider">
+                            Pending Payouts: ₹{balances.pendingSettlements.toLocaleString()}
+                        </p>
+                        <div className="mt-3">
                             <button 
                                 onClick={() => setIsRequesting(true)}
                                 className="w-full btn-primary py-2 text-xs font-bold"
@@ -205,17 +230,6 @@ export default function PaymentsDashboard() {
                                 Withdraw Funds
                             </button>
                         </div>
-                    </div>
-
-                    <div className="glass-card p-6 border-l-4 border-l-orange-500 relative overflow-hidden group">
-                        <div className="absolute right-[-20px] top-[-20px] bg-orange-500/10 w-32 h-32 rounded-full blur-2xl group-hover:bg-orange-500/20 transition-all"></div>
-                        <div className="flex items-center gap-2 text-[hsl(var(--muted-foreground))] mb-2 font-bold text-sm">
-                            <Clock size={18} /> PENDING SETTLEMENTS
-                        </div>
-                        <div className="text-4xl font-bold text-[hsl(var(--foreground))]">
-                            ₹{balances.pendingSettlements.toLocaleString()}
-                        </div>
-                        <p className="text-xs text-[hsl(var(--muted-foreground))] mt-2">Withdrawals currently processing</p>
                     </div>
                 </div>
 
