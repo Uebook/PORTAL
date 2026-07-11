@@ -1,0 +1,33 @@
+import { OnModuleInit } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { CmsHero, CmsPromo, CmsDestination, CmsBlog, CmsPolicy } from './entities/cms.entity';
+export declare class CmsService implements OnModuleInit {
+    private readonly heroRepository;
+    private readonly promoRepository;
+    private readonly destinationRepository;
+    private readonly blogRepository;
+    private readonly policyRepository;
+    constructor(heroRepository: Repository<CmsHero>, promoRepository: Repository<CmsPromo>, destinationRepository: Repository<CmsDestination>, blogRepository: Repository<CmsBlog>, policyRepository: Repository<CmsPolicy>);
+    onModuleInit(): Promise<void>;
+    private seedHero;
+    private seedPromos;
+    private seedDestinations;
+    private seedBlogs;
+    private seedPolicies;
+    getHero(): Promise<CmsHero>;
+    getPromos(service?: string): Promise<CmsPromo[]>;
+    getDestinations(isInternational?: boolean): Promise<CmsDestination[]>;
+    getBlogs(): Promise<CmsBlog[]>;
+    getPolicy(key: string): Promise<CmsPolicy | null>;
+    updateHero(id: string, data: Partial<CmsHero>): Promise<CmsHero | null>;
+    updatePromo(id: string, data: Partial<CmsPromo>): Promise<CmsPromo | null>;
+    createPromo(data: Partial<CmsPromo>): Promise<Partial<CmsPromo> & CmsPromo>;
+    deletePromo(id: string): Promise<import("typeorm").DeleteResult>;
+    updateDestination(id: string, data: Partial<CmsDestination>): Promise<CmsDestination | null>;
+    createDestination(data: Partial<CmsDestination>): Promise<Partial<CmsDestination> & CmsDestination>;
+    deleteDestination(id: string): Promise<import("typeorm").DeleteResult>;
+    updateBlog(id: string, data: Partial<CmsBlog>): Promise<CmsBlog | null>;
+    createBlog(data: Partial<CmsBlog>): Promise<Partial<CmsBlog> & CmsBlog>;
+    deleteBlog(id: string): Promise<import("typeorm").DeleteResult>;
+    updatePolicy(key: string, title: string, contentHtml: string): Promise<CmsPolicy>;
+}
