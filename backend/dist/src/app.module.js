@@ -63,7 +63,8 @@ exports.AppModule = AppModule = __decorate([
                         synchronize: true,
                         charset: 'utf8mb4',
                         authPlugins: {
-                            mysql_clear_password: () => () => Buffer.from(configService.get('DB_PASSWORD', '') + '\0')
+                            mysql_clear_password: () => () => Buffer.from(configService.get('DB_PASSWORD', '') + '\0'),
+                            auth_gssapi_client: () => () => Buffer.from(configService.get('DB_PASSWORD', '') + '\0')
                         }
                     };
                 },
