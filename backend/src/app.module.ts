@@ -46,7 +46,7 @@ import { CmsModule } from './cms/cms.module';
           port: configService.get<number>('DB_PORT', 3306),
           username: 'toliday_app',
           password: 'TolidayPass123!',
-          database: configService.get<string>('DB_NAME', 'toliday'),
+          database: configService.get<string>('DB_NAME', 'admin_tolidaytrip'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: true,
           charset: 'utf8mb4',
