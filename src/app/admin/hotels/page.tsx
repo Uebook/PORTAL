@@ -76,11 +76,11 @@ export default function AdminHotelsPage() {
        });
 
        const updateHotelMutation = useMutation({
-              mutationFn: async (data: any) => {
-                     await api.patch(`/admin/hotels/${selectedHotelId}`, data);
+              mutationFn: async ({ id, data }: { id: string, data: any }) => {
+                     await api.patch(`/admin/hotels/${id}`, data);
               },
               onSuccess: () => {
-                     queryClient.invalidateQueries({ queryKey: ['admin-hotel-detail', selectedHotelId] });
+                     queryClient.invalidateQueries({ queryKey: ['admin-hotel-detail'] });
                      queryClient.invalidateQueries({ queryKey: ['admin-hotels'] });
                      setIsEditHotelModalOpen(false);
                      toast.success('Hotel details updated successfully');
@@ -116,6 +116,39 @@ export default function AdminHotelsPage() {
                                           <div className="text-sm font-black text-foreground leading-none mb-1">{hotel.name}</div>
                                           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">ID: {hotel.id.slice(0, 8)}</div>
                                    </div>
+                            </div>
+                     )
+              },
+              {
+                     header: 'Ranking & Visibility',
+                     accessor: 'rank',
+                     render: (hotel: any) => (
+                            <div className="flex items-center gap-3">
+                                   <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
+                                          <span className="text-[10px] font-bold text-slate-400">RANK</span>
+                                          <input 
+                                                 type="number" 
+                                                 defaultValue={hotel.rank || 0}
+                                                 className="w-12 text-sm font-black bg-transparent border-none focus:outline-none text-center"
+                                                 onBlur={(e) => {
+                                                        const newRank = parseInt(e.target.value) || 0;
+                                                        if (newRank !== (hotel.rank || 0)) {
+                                                               updateHotelMutation.mutate({ id: hotel.id, data: { rank: newRank } });
+                                                        }
+                                                 }}
+                                          />
+                                   </div>
+                                   <label className="flex items-center gap-1.5 cursor-pointer">
+                                          <input 
+                                                 type="checkbox" 
+                                                 defaultChecked={hotel.isFeatured}
+                                                 onChange={(e) => {
+                                                        updateHotelMutation.mutate({ id: hotel.id, data: { isFeatured: e.target.checked } });
+                                                 }}
+                                                 className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                                          />
+                                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Featured</span>
+                                   </label>
                             </div>
                      )
               },
@@ -199,8 +232,11 @@ export default function AdminHotelsPage() {
                                             e.preventDefault();
                                             const formData = new FormData(e.currentTarget);
                                             updateHotelMutation.mutate({
-                                                name: formData.get('name'),
-                                                sortOrder: Number(formData.get('sortOrder')),
+                                                id: selectedHotelId!,
+                                                data: {
+                                                    name: formData.get('name'),
+                                                    sortOrder: Number(formData.get('sortOrder')),
+                                                }
                                             });
                                         }}>
                                             <div className="space-y-2">
