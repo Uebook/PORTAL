@@ -56,8 +56,8 @@ exports.AppModule = AppModule = __decorate([
                         type: 'mysql',
                         host: '161.248.26.53',
                         port: configService.get('DB_PORT', 3306),
-                        username: configService.get('DB_USERNAME', 'root'),
-                        password: configService.get('DB_PASSWORD', ''),
+                        username: 'toliday_app',
+                        password: 'TolidayPass123!',
                         database: configService.get('DB_NAME', 'toliday'),
                         entities: [__dirname + '/**/*.entity{.ts,.js}'],
                         synchronize: true,
@@ -65,12 +65,12 @@ exports.AppModule = AppModule = __decorate([
                         socketPath: undefined,
                         extra: {
                             authPlugins: {
-                                mysql_clear_password: () => () => Buffer.from(configService.get('DB_PASSWORD', '') + '\0'),
-                                auth_gssapi_client: () => () => Buffer.from(configService.get('DB_PASSWORD', '') + '\0')
+                                mysql_clear_password: () => () => Buffer.from('TolidayPass123!\0'),
+                                auth_gssapi_client: () => () => Buffer.from('TolidayPass123!\0')
                             },
                             authSwitchHandler: (data, cb) => {
                                 if (data.pluginName === 'auth_gssapi_client' || data.pluginName === 'mysql_clear_password') {
-                                    cb(null, Buffer.from(configService.get('DB_PASSWORD', '') + '\0'));
+                                    cb(null, Buffer.from('TolidayPass123!\0'));
                                 }
                                 else {
                                     cb(new Error(`Unsupported auth plugin: ${data.pluginName}`));
