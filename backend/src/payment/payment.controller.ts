@@ -41,8 +41,8 @@ export class PaymentController {
       order_id: body.bookingId,
       amount: amount,
       currency: 'INR',
-      redirect_url: `${process.env.BACKEND_URL || 'http://localhost:3001'}/api/public/payment/webhook`,
-      cancel_url: `${process.env.BACKEND_URL || 'http://localhost:3001'}/api/public/payment/webhook`,
+      redirect_url: `${process.env.BACKEND_URL || 'https://localhost:3001'}/api/public/payment/webhook`,
+      cancel_url: `${process.env.BACKEND_URL || 'https://localhost:3001'}/api/public/payment/webhook`,
       language: 'EN',
       billing_name: guestName,
       billing_email: guestEmail,
@@ -65,7 +65,7 @@ export class PaymentController {
   @Post('webhook')
   async handleWebhook(@Body() body: { encResp: string }, @Res() res: Response) {
     if (!body.encResp) {
-      return res.redirect('http://localhost:3000/?status=failed');
+      return res.redirect('https://localhost:3000/?status=failed');
     }
 
     const decryptedStr = this.paymentService.decrypt(body.encResp);
@@ -75,7 +75,7 @@ export class PaymentController {
     const orderStatus = data['order_status'];
 
     if (!orderId) {
-      return res.redirect('http://localhost:3000/?status=failed');
+      return res.redirect('https://localhost:3000/?status=failed');
     }
 
     // We assume hotelId is not needed for admin-level webhook updates, but our updateStatus method requires hotelId.
@@ -110,7 +110,7 @@ export class PaymentController {
              await this.bookingService['bookingRepository'].save(booking);
           }
           
-          return res.redirect(`http://localhost:3000/?status=success&bookingId=${orderId}`);
+          return res.redirect(`https://localhost:3000/?status=success&bookingId=${orderId}`);
         } else {
           booking.status = 'CANCELLED';
           if (isBus) {
@@ -119,13 +119,13 @@ export class PaymentController {
              await this.bookingService['bookingRepository'].save(booking);
           }
           
-          return res.redirect(`http://localhost:3000/?status=failed&bookingId=${orderId}`);
+          return res.redirect(`https://localhost:3000/?status=failed&bookingId=${orderId}`);
         }
       }
     } catch (err) {
       console.error('Webhook error:', err);
     }
     
-    return res.redirect('http://localhost:3000/?status=failed');
+    return res.redirect('https://localhost:3000/?status=failed');
   }
 }

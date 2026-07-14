@@ -77,11 +77,17 @@ export class Hotel {
   @Column({ nullable: true, type: 'text' })
   petPolicy: string;
 
-  @Column({ type: 'simple-array', nullable: true })
+  @Column({ type: 'json', nullable: true })
   propertyRules: string[];
 
   @Column({ type: 'simple-array', nullable: true })
   amenities: string[];
+
+  @Column({ type: 'boolean', default: false })
+  isFeatured: boolean;
+
+  @Column({ type: 'int', default: 0 })
+  rank: number;
 
   @Column({ type: 'simple-array', nullable: true })
   images: string[];

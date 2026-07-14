@@ -54,8 +54,8 @@ let PaymentController = class PaymentController {
             order_id: body.bookingId,
             amount: amount,
             currency: 'INR',
-            redirect_url: `${process.env.BACKEND_URL || 'http://localhost:3001'}/api/public/payment/webhook`,
-            cancel_url: `${process.env.BACKEND_URL || 'http://localhost:3001'}/api/public/payment/webhook`,
+            redirect_url: `${process.env.BACKEND_URL || 'https://localhost:3001'}/api/public/payment/webhook`,
+            cancel_url: `${process.env.BACKEND_URL || 'https://localhost:3001'}/api/public/payment/webhook`,
             language: 'EN',
             billing_name: guestName,
             billing_email: guestEmail,
@@ -73,14 +73,14 @@ let PaymentController = class PaymentController {
     }
     async handleWebhook(body, res) {
         if (!body.encResp) {
-            return res.redirect('http://localhost:3000/?status=failed');
+            return res.redirect('https://localhost:3000/?status=failed');
         }
         const decryptedStr = this.paymentService.decrypt(body.encResp);
         const data = this.paymentService.parseDecryptedString(decryptedStr);
         const orderId = data['order_id'];
         const orderStatus = data['order_status'];
         if (!orderId) {
-            return res.redirect('http://localhost:3000/?status=failed');
+            return res.redirect('https://localhost:3000/?status=failed');
         }
         try {
             let booking = await this.bookingService['bookingRepository'].findOne({ where: { id: orderId } });
@@ -105,7 +105,7 @@ let PaymentController = class PaymentController {
                     else {
                         await this.bookingService['bookingRepository'].save(booking);
                     }
-                    return res.redirect(`http://localhost:3000/?status=success&bookingId=${orderId}`);
+                    return res.redirect(`https://localhost:3000/?status=success&bookingId=${orderId}`);
                 }
                 else {
                     booking.status = 'CANCELLED';
@@ -115,14 +115,14 @@ let PaymentController = class PaymentController {
                     else {
                         await this.bookingService['bookingRepository'].save(booking);
                     }
-                    return res.redirect(`http://localhost:3000/?status=failed&bookingId=${orderId}`);
+                    return res.redirect(`https://localhost:3000/?status=failed&bookingId=${orderId}`);
                 }
             }
         }
         catch (err) {
             console.error('Webhook error:', err);
         }
-        return res.redirect('http://localhost:3000/?status=failed');
+        return res.redirect('https://localhost:3000/?status=failed');
     }
 };
 exports.PaymentController = PaymentController;

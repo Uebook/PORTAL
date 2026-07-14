@@ -44,6 +44,8 @@ let Hotel = class Hotel {
     petPolicy;
     propertyRules;
     amenities;
+    isFeatured;
+    rank;
     images;
     ownerFirstName;
     ownerLastName;
@@ -147,13 +149,21 @@ __decorate([
     __metadata("design:type", String)
 ], Hotel.prototype, "petPolicy", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'simple-array', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'json', nullable: true }),
     __metadata("design:type", Array)
 ], Hotel.prototype, "propertyRules", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'simple-array', nullable: true }),
     __metadata("design:type", Array)
 ], Hotel.prototype, "amenities", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'boolean', default: false }),
+    __metadata("design:type", Boolean)
+], Hotel.prototype, "isFeatured", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'int', default: 0 }),
+    __metadata("design:type", Number)
+], Hotel.prototype, "rank", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'simple-array', nullable: true }),
     __metadata("design:type", Array)

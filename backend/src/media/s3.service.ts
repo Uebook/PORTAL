@@ -36,7 +36,7 @@ export class S3Service {
       fs.writeFileSync(filePath, buffer);
       console.log(`Local Upload Success: Saved to ${filePath}`);
 
-      const resolvedBaseUrl = baseUrl || this.configService.get<string>('BACKEND_URL') || 'http://localhost:3001';
+      const resolvedBaseUrl = baseUrl || this.configService.get<string>('BACKEND_URL') || 'https://localhost:3001';
       return `${resolvedBaseUrl}/uploads/${fileName}`;
     } catch (localError) {
       console.error('Local File Save Error:', localError);

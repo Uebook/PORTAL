@@ -30,6 +30,8 @@ export declare class Hotel {
     petPolicy: string;
     propertyRules: string[];
     amenities: string[];
+    isFeatured: boolean;
+    rank: number;
     images: string[];
     ownerFirstName: string;
     ownerLastName: string;
