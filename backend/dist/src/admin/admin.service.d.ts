@@ -1,5 +1,6 @@
 import { Repository } from 'typeorm';
 import { Hotel, HotelStatus } from '../hotel/entities/hotel.entity';
+import { Review } from '../hotel/entities/review.entity';
 import { TourPartner, PartnerStatus as TourPartnerStatus } from '../packages/entities/tour-partner.entity';
 import { BusVendor, BusVendorStatus } from '../buses/entities/bus-vendor.entity';
 import { CabVendor } from '../cabs/entities/cab-vendor.entity';
@@ -31,15 +32,16 @@ export declare class AdminService {
     private vehicleRepository;
     private settingsRepository;
     private ledgerRepository;
+    private reviewRepository;
     private whatsappService;
-    constructor(hotelRepository: Repository<Hotel>, tourPartnerRepository: Repository<TourPartner>, busVendorRepository: Repository<BusVendor>, cabVendorRepository: Repository<CabVendor>, bookingRepository: Repository<Booking>, busBookingRepository: Repository<BusBooking>, cabBookingRepository: Repository<CabBooking>, staffRepository: Repository<Staff>, promotionRepository: Repository<Promotion>, roomTypeRepository: Repository<RoomType>, tourPackageRepository: Repository<TourPackage>, busRepository: Repository<Bus>, vehicleRepository: Repository<Vehicle>, settingsRepository: Repository<GlobalSetting>, ledgerRepository: Repository<LedgerEntry>, whatsappService: WhatsappService);
+    constructor(hotelRepository: Repository<Hotel>, tourPartnerRepository: Repository<TourPartner>, busVendorRepository: Repository<BusVendor>, cabVendorRepository: Repository<CabVendor>, bookingRepository: Repository<Booking>, busBookingRepository: Repository<BusBooking>, cabBookingRepository: Repository<CabBooking>, staffRepository: Repository<Staff>, promotionRepository: Repository<Promotion>, roomTypeRepository: Repository<RoomType>, tourPackageRepository: Repository<TourPackage>, busRepository: Repository<Bus>, vehicleRepository: Repository<Vehicle>, settingsRepository: Repository<GlobalSetting>, ledgerRepository: Repository<LedgerEntry>, reviewRepository: Repository<Review>, whatsappService: WhatsappService);
     processSettlements(): Promise<{
         processedCount: number;
         totalVolume: number;
     }>;
     private createLedgerEntry;
     updatePromotionStatus(id: string, isVerified: boolean): Promise<Promotion>;
-    getDashboardStats(): Promise<{
+    getDashboardStats(period?: string): Promise<{
         counts: {
             hotels: number;
             packages: number;
@@ -192,7 +194,7 @@ export declare class AdminService {
         staffs: Staff[];
         roomTypes: RoomType[];
         bookings: Booking[];
-        reviews: import("../hotel/entities/review.entity").Review[];
+        reviews: Review[];
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -201,6 +203,12 @@ export declare class AdminService {
     updateHotelRoom(roomId: string, data: any): Promise<RoomType>;
     addHotelRoom(hotelId: string, data: any): Promise<RoomType[]>;
     deleteHotelRoom(id: string): Promise<import("typeorm").DeleteResult>;
+    createHotel(data: any): Promise<Hotel[]>;
+    deleteHotel(id: string): Promise<{
+        success: boolean;
+        message: string;
+    }>;
+    getHotelReviews(hotelId: string): Promise<Review[]>;
     findAllTourPartners(status?: TourPartnerStatus): Promise<TourPartner[]>;
     findTourPartnerById(id: string): Promise<{
         offers: Promotion[];

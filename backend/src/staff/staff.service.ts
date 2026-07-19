@@ -79,7 +79,10 @@ export class StaffService {
   }
 
   async findOne(id: string) {
-    const s = await this.staffRepository.findOne({ where: { id } });
+    const s = await this.staffRepository.findOne({ 
+      where: { id },
+      relations: ['hotel', 'tourPartner', 'busVendor', 'cabVendor']
+    });
     if (!s) throw new NotFoundException('Staff member not found');
     return this.sanitize(s);
   }

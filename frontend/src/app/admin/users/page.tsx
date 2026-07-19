@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Topbar from '@/components/layout/Topbar';
 import api from '@/lib/api';
@@ -7,7 +9,7 @@ import {
        Users, Search, Shield, Building2,
        Mail, Phone, ShieldCheck, ShieldAlert,
        MoreVertical, AlertCircle, UserPlus,
-       Lock, Unlock, MapPin, Zap, Download
+       Lock, Unlock, MapPin, Zap, Download, Eye, History
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -114,151 +116,187 @@ export default function AdminUsersPage() {
               return <div className="p-20 text-center font-black text-muted-foreground animate-pulse uppercase tracking-[0.3em]">Decoding User Matrix...</div>;
        }
 
-       return (
-              <div className="p-6 md:p-8 space-y-6 md:space-y-8 animate-fadeIn max-w-[1600px] mx-auto min-h-full">
-                     <Topbar title="Identity Directory" subtitle="Manage permissions and system access for all staff and admins" />
+  return (
+    <div className="p-6 md:p-8 animate-fadeIn">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+        <div>
+          <h1 className="page-title">Identity Directory</h1>
+          <p className="page-subtitle">Manage permissions and system access for all staff and admins</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 bg-[#cca35e] text-white rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-[#b58c49] transition-colors">
+            <UserPlus size={16} /> Register Admin
+          </button>
+        </div>
+      </div>
 
-                     {isModalOpen && (
-                            <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-                                   <div className="bg-background/80 backdrop-blur-2xl border border-border/10 rounded-[28px] p-8 w-full max-w-lg shadow-[0_20px_60px_rgba(0,0,0,0.1)] animate-fadeIn">
-                                          <div className="flex items-center justify-between mb-6">
-                                                 <h2 className="text-2xl font-black text-foreground tracking-tight">Register New Admin</h2>
-                                                 <button onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground"><AlertCircle size={24} /></button>
-                                          </div>
-                                          <form onSubmit={handleCreateStaff} className="space-y-4">
-                                                 <div>
-                                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 block">Full Name</label>
-                                                        <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-black/5 dark:bg-white/5 border border-transparent text-foreground rounded-xl py-3 px-4 font-bold focus:ring-2 focus:ring-indigo-500/20" />
-                                                 </div>
-                                                 <div>
-                                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 block">Email Address</label>
-                                                        <input required type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full bg-black/5 dark:bg-white/5 border border-transparent text-foreground rounded-xl py-3 px-4 font-bold focus:ring-2 focus:ring-indigo-500/20" />
-                                                 </div>
-                                                 <div>
-                                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 block">Temporary Password</label>
-                                                        <input required type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} className="w-full bg-black/5 dark:bg-white/5 border border-transparent text-foreground rounded-xl py-3 px-4 font-bold focus:ring-2 focus:ring-indigo-500/20" />
-                                                 </div>
-                                                 
-                                                 <div className="pt-2">
-                                                        <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 block">Module Access Permissions</label>
-                                                        <div className="grid grid-cols-2 gap-3">
-                                                               {Object.keys(formData.permissions).map((key) => (
-                                                                      <label key={key} className="flex items-center gap-3 p-3 rounded-xl border border-slate-100 bg-slate-50 cursor-pointer hover:border-indigo-500/50 transition-colors">
-                                                                             <input
-                                                                                    type="checkbox"
-                                                                                    checked={(formData.permissions as any)[key]}
-                                                                                    onChange={(e) => setFormData({
-                                                                                           ...formData,
-                                                                                           permissions: { ...formData.permissions, [key]: e.target.checked }
-                                                                                    })}
-                                                                                    className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
-                                                                             />
-                                                                             <span className="text-xs font-bold text-muted-foreground capitalize">
-                                                                                    {key.replace('_', ' ')}
-                                                                             </span>
-                                                                      </label>
-                                                               ))}
-                                                        </div>
-                                                 </div>
-
-                                                 <div className="pt-4 flex gap-4">
-                                                        <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-4 bg-slate-100 text-muted-foreground font-black rounded-xl hover:bg-slate-200">CANCEL</button>
-                                                        <button type="submit" disabled={createStaffMutation.isPending} className="flex-1 py-4 bg-indigo-600 text-foreground font-black rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-600/20">
-                                                               {createStaffMutation.isPending ? 'CREATING...' : 'REGISTER'}
-                                                        </button>
-                                                 </div>
-                                          </form>
-                                   </div>
-                            </div>
-                     )}
-
-                     <div className="ios-sheet p-6 rounded-[28px] border border-border/10 shadow-[0_12px_40px_rgba(0,0,0,0.02)] mb-12 flex flex-col md:flex-row items-center gap-6">
-                            <div className="relative flex-1 w-full group">
-                                   <Search size={20} className="absolute left-6 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-indigo-600 transition-colors" />
-                                   <input
-                                          type="text"
-                                          placeholder="Search Identities by name, email, or role..."
-                                          value={filter}
-                                          onChange={(e) => setFilter(e.target.value)}
-                                          className="w-full bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl text-foreground py-5 pl-16 pr-6 text-sm font-black text-foreground focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-                                   />
-                            </div>
-                            <div className="flex items-center gap-3">
-                                   <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl py-5 px-6 text-sm font-black focus:outline-none focus:ring-4 focus:ring-indigo-500/10 text-foreground">
-                                          <option value="ALL">All Roles</option><option value="ADMIN">Admin</option><option value="OWNER">Owner</option><option value="MANAGER">Manager</option>
-                                   </select>
-                                   <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl py-5 px-6 text-sm font-black focus:outline-none focus:ring-4 focus:ring-indigo-500/10 text-foreground">
-                                          <option value="ALL">All Status</option><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option>
-                                   </select>
-                                   <button onClick={exportToCSV} className="flex items-center gap-2 px-6 py-5 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl text-sm font-black uppercase tracking-widest transition-all hover:opacity-90">
-                                          <Download size={18} /> Export
-                                   </button>
-                            </div>
-                     </div>
-
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {filteredUsers.map((user: any) => (
-                                   <div key={user.id} className="ios-platter border border-border/10 rounded-[28px] p-8 hover:scale-[1.02] shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-transform transition-all group relative overflow-hidden">
-                                          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-1000" />
-                                          
-                                          <div className="flex items-start justify-between mb-8 relative z-10">
-                                                 <div className="flex gap-5">
-                                                        <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-2xl font-black text-indigo-600 group-hover:bg-indigo-600 group-hover:text-foreground transition-all shadow-inner">
-                                                               {user.name.charAt(0)}
-                                                        </div>
-                                                        <div>
-                                                               <h3 className="font-black text-foreground text-lg group-hover:text-indigo-600 transition-colors">{user.name}</h3>
-                                                               <div className="flex items-center gap-2 mt-1.5">
-                                                                      <div className={`w-2 h-2 rounded-full ${user.isActive ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                                                                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{user.role}</span>
-                                                               </div>
-                                                        </div>
-                                                 </div>
-                                                 <button className="p-3 text-muted-foreground/40 hover:text-foreground hover:bg-slate-50 rounded-xl transition-all"><MoreVertical size={20} /></button>
-                                          </div>
-
-                                          <div className="space-y-4 relative z-10">
-                                                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-transparent text-foreground group-hover:border-indigo-100 transition-colors">
-                                                        <div className="p-2 bg-white rounded-lg text-muted-foreground"><Mail size={14} /></div>
-                                                        <span className="text-xs text-muted-foreground font-bold truncate">{user.email}</span>
-                                                 </div>
-
-                                                 <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-transparent text-foreground group-hover:border-indigo-100 transition-colors">
-                                                        <div className="p-2 bg-white rounded-lg text-muted-foreground"><Building2 size={14} /></div>
-                                                        <span className="text-xs text-muted-foreground font-bold truncate">{user.hotel?.name || user.tourPartner?.companyName || user.busVendor?.companyName || 'Global Management'}</span>
-                                                 </div>
-                                          </div>
-
-                                          <div className="mt-8 flex items-center justify-between pt-8 border-t border-slate-50 relative z-10">
-                                                 <div className="flex items-center gap-2">
-                                                        <ShieldCheck size={16} className={user.isActive ? 'text-emerald-500' : 'text-muted-foreground/20'} />
-                                                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Access Protocol</span>
-                                                 </div>
-                                                  <button
-                                                         onClick={() => toggleStatusMutation.mutate({ id: user.id, active: user.isActive })}
-                                                         disabled={toggleStatusMutation.isPending}
-                                                         className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black transition-all uppercase tracking-widest ${user.isActive
-                                                                        ? 'text-red-500 bg-red-50 hover:bg-red-500 hover:text-foreground shadow-lg shadow-red-500/10'
-                                                                        : 'text-emerald-500 bg-emerald-50 hover:bg-emerald-500 hover:text-foreground shadow-lg shadow-emerald-500/10'
-                                                                }`}
-                                                  >
-                                                         {user.isActive ? <Lock size={12} /> : <Unlock size={12} />}
-                                                         {user.isActive ? 'Revoke' : 'Authorize'}
-                                                  </button>
-                                          </div>
-                                   </div>
-                            ))}
-                     </div>
-
-                     {filteredUsers.length === 0 && (
-                            <div className="flex flex-col items-center justify-center py-32 bg-slate-50 rounded-[3rem] border-4 border-dashed border-slate-100">
-                                   <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-muted-foreground/20 shadow-xl mb-6">
-                                          <Search size={40} />
-                                   </div>
-                                   <h4 className="text-2xl font-black text-muted-foreground/40 uppercase tracking-widest">Zero Results</h4>
-                                   <p className="text-muted-foreground font-bold mt-2 text-sm uppercase tracking-tighter">The system found no identities matching your query</p>
-                            </div>
-                     )}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white border border-border rounded-2xl p-8 w-full max-w-lg shadow-xl animate-fadeIn">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold font-serif text-slate-800">Register New Admin</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700"><AlertCircle size={24} /></button>
+            </div>
+            <form onSubmit={handleCreateStaff} className="space-y-4">
+              <div>
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 block">Full Name</label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="form-input w-full" />
               </div>
-       );
+              <div>
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 block">Email Address</label>
+                <input required type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="form-input w-full" />
+              </div>
+              <div>
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 block">Temporary Password</label>
+                <input required type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} className="form-input w-full" />
+              </div>
+              
+              <div className="pt-2">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Module Access Permissions</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.keys(formData.permissions).map((key) => (
+                    <label key={key} className="flex items-center gap-2 p-2 rounded-lg border border-slate-100 bg-slate-50 cursor-pointer hover:border-slate-300 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={(formData.permissions as any)[key]}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          permissions: { ...formData.permissions, [key]: e.target.checked }
+                        })}
+                        className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
+                      />
+                      <span className="text-[10px] font-bold text-slate-600 capitalize">
+                        {key.replace('_', ' ')}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-4 flex gap-4">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 bg-slate-100 text-slate-500 font-bold rounded-lg hover:bg-slate-200">CANCEL</button>
+                <button type="submit" disabled={createStaffMutation.isPending} className="flex-1 py-3 bg-[#cca35e] text-white font-bold rounded-lg hover:bg-[#b58c49]">
+                  {createStaffMutation.isPending ? 'CREATING...' : 'REGISTER'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className="card overflow-hidden">
+        <div className="card-header bg-slate-50 border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h3 className="card-title">User Directory</h3>
+          
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <input
+                type="text"
+                placeholder="Search Identities..."
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="form-input pl-10"
+              />
+            </div>
+            <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="form-input bg-white w-32">
+              <option value="ALL">All Roles</option>
+              <option value="ADMIN">Admin</option>
+              <option value="OWNER">Owner</option>
+              <option value="MANAGER">Manager</option>
+            </select>
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="form-input bg-white w-32">
+              <option value="ALL">All Status</option>
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
+            <button onClick={exportToCSV} className="p-2.5 bg-white border border-border rounded-lg text-slate-600 hover:bg-slate-50" title="Export CSV">
+              <Download size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-border">
+              <tr>
+                <th className="px-6 py-4">User</th>
+                <th className="px-6 py-4">Role</th>
+                <th className="px-6 py-4">Entity / Group</th>
+                <th className="px-6 py-4">Access Status</th>
+                <th className="px-6 py-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500 font-semibold">
+                    No identities matching your query
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((user: any) => (
+                  <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">
+                          {user.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-700">{user.name}</p>
+                          <p className="text-xs text-slate-500">{user.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider">
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-slate-600">
+                        <Building2 size={14} className="text-slate-400" />
+                        <span className="font-semibold text-xs">
+                          {user.hotel?.name || user.tourPartner?.companyName || user.busVendor?.companyName || 'Global Management'}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        user.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {user.isActive ? 'Active' : 'Revoked'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end items-center gap-2">
+                        <Link href={`/admin/users/${user.id}?tab=profile`} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View Profile">
+                          <Eye size={16} />
+                        </Link>
+                        <Link href={`/admin/users/${user.id}?tab=bookings`} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Booking History">
+                          <History size={16} />
+                        </Link>
+                        <button
+                          onClick={() => toggleStatusMutation.mutate({ id: user.id, active: user.isActive })}
+                          disabled={toggleStatusMutation.isPending}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors inline-flex items-center gap-1.5 ${
+                            user.isActive
+                              ? 'text-red-500 hover:bg-red-50'
+                              : 'text-emerald-500 hover:bg-emerald-50'
+                          }`}
+                        >
+                          {user.isActive ? <Lock size={12} /> : <Unlock size={12} />}
+                          {user.isActive ? 'Revoke' : 'Authorize'}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -84,14 +84,14 @@ export default function LandingPage() {
               <Hotel size={20} color="white" />
             </div>
             <div>
-              <span className="font-extrabold text-lg text-[hsl(var(--foreground))] leading-tight tracking-tight block">TolidayTrip</span>
-              <span className="text-xs font-semibold text-accent uppercase tracking-widest block">Partner Network</span>
+              <span className="font-extrabold text-lg text-white leading-tight tracking-tight block">TolidayTrip</span>
+              <span className="text-xs font-semibold text-white/70 uppercase tracking-widest block">Partner Network</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <button onClick={() => openModal('login')} className="hidden sm:flex text-sm font-semibold text-[hsl(var(--foreground))] hover:text-accent transition-colors">
+            <button onClick={() => openModal('login')} className="hidden sm:flex text-sm font-semibold text-white hover:text-white/80 transition-colors">
               Sign In
             </button>
             <button onClick={() => openModal('signup')} className="btn-primary px-5 py-2.5 text-sm">
@@ -281,15 +281,15 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center shadow-md">
               <Hotel size={16} color="white" />
             </div>
-            <span className="font-bold text-[hsl(var(--foreground))] tracking-tight">Toliday Partner Network</span>
+            <span className="font-bold text-white tracking-tight">Toliday Partner Network</span>
           </div>
-          <div className="text-sm text-[hsl(var(--muted-foreground))]">
+          <div className="text-sm text-white/70">
             &copy; {new Date().getFullYear()} TolidayTrip. All rights reserved.
           </div>
-          <div className="flex items-center gap-6 text-sm font-medium text-[hsl(var(--muted-foreground))]">
-            <span className="cursor-pointer hover:text-accent transition-colors">Supplier Agreement</span>
-            <span className="cursor-pointer hover:text-accent transition-colors">Privacy Policy</span>
-            <span className="cursor-pointer hover:text-accent transition-colors">Help Center</span>
+          <div className="flex items-center gap-6 text-sm font-medium text-white/70">
+            <span className="cursor-pointer hover:text-white transition-colors">Supplier Agreement</span>
+            <span className="cursor-pointer hover:text-white transition-colors">Privacy Policy</span>
+            <span className="cursor-pointer hover:text-white transition-colors">Help Center</span>
           </div>
         </div>
       </footer>
@@ -298,17 +298,17 @@ export default function LandingPage() {
       {modalConfig.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in" onClick={closeModal} />
-          <div className="glass-card bg-[var(--sidebar-bg)] relative z-10 w-full max-w-3xl p-6 sm:p-8 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-2xl bg-[var(--sidebar-bg)] rounded-3xl overflow-hidden shadow-2xl transition-all animate-in zoom-in-95 p-8 border border-[var(--glass-border)]">
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-[var(--table-header)] text-[hsl(var(--muted-foreground))] transition-colors"
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-white/70 transition-colors"
             >
               <X size={20} />
             </button>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[hsl(var(--foreground))] mb-2">
-              {modalConfig.type === 'login' ? 'Sign In to Portal' : 'Register New Enterprise'}
-            </h2>
-            <p className="text-[hsl(var(--muted-foreground))] mb-8">Select your service vertical to proceed to the {modalConfig.type === 'login' ? 'login' : 'onboarding'} dashboard.</p>
+            <h3 className="text-2xl font-extrabold text-white mb-2">
+              {modalConfig.type === 'login' ? 'Sign In to Portal' : 'Create Partner Account'}
+            </h3>
+            <p className="text-white/70 mb-8">Select your service vertical to proceed to the {modalConfig.type === 'login' ? 'login' : 'registration'} dashboard.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {services.map((s) => (

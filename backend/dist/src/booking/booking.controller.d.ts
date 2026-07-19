@@ -14,6 +14,8 @@ export declare class BookingController {
     constructor(bookingService: BookingService);
     create(req: any, createDto: CreateBookingDto): Promise<import("./entities/booking.entity").Booking>;
     findAllGlobal(req: any): Promise<import("./entities/booking.entity").Booking[]>;
+    findOneGlobal(req: any, id: string): Promise<import("./entities/booking.entity").Booking>;
+    updateStatusGlobal(req: any, id: string, updateDto: UpdateBookingStatusDto): Promise<import("./entities/booking.entity").Booking>;
     findAll(req: any): Promise<import("./entities/booking.entity").Booking[]>;
     findOne(req: any, id: string): Promise<import("./entities/booking.entity").Booking>;
     updateStatus(req: any, id: string, updateDto: UpdateBookingStatusDto): Promise<import("./entities/booking.entity").Booking>;

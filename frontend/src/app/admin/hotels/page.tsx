@@ -187,6 +187,29 @@ export default function AdminHotelsPage() {
       )
     },
     {
+      header: 'Commission Model',
+      accessor: 'commission',
+      render: (hotel: any) => (
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-slate-400 w-20">Commission %</span>
+            <input type="number" defaultValue={hotel.commissionRate || 10} className="w-16 border rounded px-2 py-1 text-xs font-bold" 
+              onBlur={(e) => { updateHotelMutation.mutate({ id: hotel.id, data: { commissionRate: Number(e.target.value) } }); }} />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-slate-400 w-20">Markup %</span>
+            <input type="number" defaultValue={hotel.markupRate || 0} className="w-16 border rounded px-2 py-1 text-xs font-bold"
+              onBlur={(e) => { updateHotelMutation.mutate({ id: hotel.id, data: { markupRate: Number(e.target.value) } }); }} />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-slate-400 w-20">Fee ₹</span>
+            <input type="number" defaultValue={hotel.feeAmount || 0} className="w-16 border rounded px-2 py-1 text-xs font-bold"
+              onBlur={(e) => { updateHotelMutation.mutate({ id: hotel.id, data: { feeAmount: Number(e.target.value) } }); }} />
+          </div>
+        </div>
+      )
+    },
+    {
       header: 'Audit Status',
       accessor: 'status',
       render: (hotel: any) => (
@@ -196,9 +219,13 @@ export default function AdminHotelsPage() {
   ];
 
   const actions = (hotel: any) => (
-    <div className="flex items-center gap-2">
-      <button onClick={() => { setSelectedHotelId(hotel.id); setActiveTab('PROFILE'); }} className="p-2.5 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-xl transition-all" title="View Details"><Eye size={18} /></button>
-      <button onClick={() => setDeleteConfirmId(hotel.id)} className="p-2.5 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all" title="Delete Hotel"><Trash2 size={18} /></button>
+    <div className="flex flex-col gap-2">
+      <button onClick={() => { setSelectedHotelId(hotel.id); setActiveTab('PROFILE'); }} className="px-4 py-2 bg-[#cca35e] text-white hover:bg-[#b58c49] rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2" title="Check complete profile">
+        <User size={14} /> Check Profile
+      </button>
+      <button onClick={() => setDeleteConfirmId(hotel.id)} className="px-4 py-2 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2" title="Delete Hotel">
+        <Trash2 size={14} /> Delete
+      </button>
     </div>
   );
 
@@ -492,14 +519,14 @@ export default function AdminHotelsPage() {
                 });
               }} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Check-in Time</label><input name="checkInTime" type="time" defaultValue={selectedHotel.checkInTime || '14:00'} className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Check-out Time</label><input name="checkOutTime" type="time" defaultValue={selectedHotel.checkOutTime || '11:00'} className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Max Adults</label><input name="maxAdults" type="number" defaultValue={selectedHotel.maxAdults || 4} className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Max Children</label><input name="maxChildren" type="number" defaultValue={selectedHotel.maxChildren || 2} className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cancellation Policy</label><textarea name="cancellationPolicy" defaultValue={selectedHotel.cancellationPolicy || ''} rows={4} placeholder="Describe cancellation terms..." className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pet Policy</label><textarea name="petPolicy" defaultValue={selectedHotel.petPolicy || ''} rows={4} placeholder="e.g. Pets not allowed..." className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Child Policy</label><textarea name="childPolicy" defaultValue={selectedHotel.childPolicy || ''} rows={4} placeholder="e.g. Children under 5 stay free..." className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
-                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Property Rules (one per line)</label><textarea name="propertyRules" defaultValue={(selectedHotel.propertyRules || []).join('\n')} rows={4} placeholder={"No smoking\nNo parties\nQuiet hours after 10pm"} className="w-full px-6 py-4 bg-black/5 dark:bg-white/5 border border-transparent rounded-2xl font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Check-in Time</label><input name="checkInTime" type="time" defaultValue={selectedHotel.checkInTime || '14:00'} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Check-out Time</label><input name="checkOutTime" type="time" defaultValue={selectedHotel.checkOutTime || '11:00'} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Max Adults</label><input name="maxAdults" type="number" defaultValue={selectedHotel.maxAdults || 4} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Max Children</label><input name="maxChildren" type="number" defaultValue={selectedHotel.maxChildren || 2} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cancellation Policy</label><textarea name="cancellationPolicy" defaultValue={selectedHotel.cancellationPolicy || ''} rows={4} placeholder="Describe cancellation terms..." className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pet Policy</label><textarea name="petPolicy" defaultValue={selectedHotel.petPolicy || ''} rows={4} placeholder="e.g. Pets not allowed..." className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Child Policy</label><textarea name="childPolicy" defaultValue={selectedHotel.childPolicy || ''} rows={4} placeholder="e.g. Children under 5 stay free..." className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
+                  <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Property Rules (one per line)</label><textarea name="propertyRules" defaultValue={(selectedHotel.propertyRules || []).join('\n')} rows={4} placeholder={"No smoking\nNo parties\nQuiet hours after 10pm"} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none" /></div>
                 </div>
                 <button type="submit" disabled={updatePoliciesMutation.isPending} className="w-full py-5 bg-amber-600 hover:bg-amber-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-amber-600/20 transition-all flex items-center justify-center gap-2"><Settings size={16} />{updatePoliciesMutation.isPending ? 'Saving...' : 'Save All Policies'}</button>
               </form>

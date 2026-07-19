@@ -5,7 +5,7 @@ import { BusVendorStatus } from '../buses/entities/bus-vendor.entity';
 export declare class AdminController {
     private readonly adminService;
     constructor(adminService: AdminService);
-    getStats(): Promise<{
+    getStats(period: string): Promise<{
         counts: {
             hotels: number;
             packages: number;
@@ -170,6 +170,12 @@ export declare class AdminController {
     updateHotelStatus(id: string, status: HotelStatus): Promise<import("../hotel/entities/hotel.entity").Hotel>;
     updateHotelDetails(id: string, data: any): Promise<import("../hotel/entities/hotel.entity").Hotel>;
     updateHotelRoom(roomId: string, data: any): Promise<import("../room-type/entities/room-type.entity").RoomType>;
+    createHotel(data: any): Promise<import("../hotel/entities/hotel.entity").Hotel[]>;
+    deleteHotel(id: string): Promise<{
+        success: boolean;
+        message: string;
+    }>;
+    getHotelReviews(id: string): Promise<import("../hotel/entities/review.entity").Review[]>;
     addHotelRoom(hotelId: string, data: any): Promise<import("../room-type/entities/room-type.entity").RoomType[]>;
     deleteHotelRoom(roomId: string): Promise<import("typeorm").DeleteResult>;
     findAllTourPartners(status?: TourPartnerStatus): Promise<import("../packages/entities/tour-partner.entity").TourPartner[]>;

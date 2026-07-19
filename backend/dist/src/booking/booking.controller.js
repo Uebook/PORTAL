@@ -64,6 +64,18 @@ let BookingController = class BookingController {
         }
         return this.bookingService.findAllGlobal();
     }
+    findOneGlobal(req, id) {
+        if (req.user.role !== 'ADMIN' && req.user.role !== 'OWNER' && req.user.role !== 'superadmin') {
+            throw new common_1.ForbiddenException('Unauthorized');
+        }
+        return this.bookingService.findOne(id);
+    }
+    updateStatusGlobal(req, id, updateDto) {
+        if (req.user.role !== 'ADMIN' && req.user.role !== 'OWNER' && req.user.role !== 'superadmin') {
+            throw new common_1.ForbiddenException('Unauthorized');
+        }
+        return this.bookingService.updateStatus(id, undefined, updateDto);
+    }
     findAll(req) {
         if (req.user.tourPartnerId) {
             return this.bookingService.findAllForTourPartner(req.user.tourPartnerId);
@@ -114,6 +126,23 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], BookingController.prototype, "findAllGlobal", null);
+__decorate([
+    (0, common_1.Get)('admin/:id'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], BookingController.prototype, "findOneGlobal", null);
+__decorate([
+    (0, common_1.Patch)('admin/:id/status'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)('id')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, update_booking_status_dto_1.UpdateBookingStatusDto]),
+    __metadata("design:returntype", void 0)
+], BookingController.prototype, "updateStatusGlobal", null);
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Request)()),

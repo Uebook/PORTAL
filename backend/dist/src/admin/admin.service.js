@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const hotel_entity_1 = require("../hotel/entities/hotel.entity");
+const review_entity_1 = require("../hotel/entities/review.entity");
 const tour_partner_entity_1 = require("../packages/entities/tour-partner.entity");
 const bus_vendor_entity_1 = require("../buses/entities/bus-vendor.entity");
 const cab_vendor_entity_1 = require("../cabs/entities/cab-vendor.entity");
@@ -48,8 +49,9 @@ let AdminService = class AdminService {
     vehicleRepository;
     settingsRepository;
     ledgerRepository;
+    reviewRepository;
     whatsappService;
-    constructor(hotelRepository, tourPartnerRepository, busVendorRepository, cabVendorRepository, bookingRepository, busBookingRepository, cabBookingRepository, staffRepository, promotionRepository, roomTypeRepository, tourPackageRepository, busRepository, vehicleRepository, settingsRepository, ledgerRepository, whatsappService) {
+    constructor(hotelRepository, tourPartnerRepository, busVendorRepository, cabVendorRepository, bookingRepository, busBookingRepository, cabBookingRepository, staffRepository, promotionRepository, roomTypeRepository, tourPackageRepository, busRepository, vehicleRepository, settingsRepository, ledgerRepository, reviewRepository, whatsappService) {
         this.hotelRepository = hotelRepository;
         this.tourPartnerRepository = tourPartnerRepository;
         this.busVendorRepository = busVendorRepository;
@@ -65,6 +67,7 @@ let AdminService = class AdminService {
         this.vehicleRepository = vehicleRepository;
         this.settingsRepository = settingsRepository;
         this.ledgerRepository = ledgerRepository;
+        this.reviewRepository = reviewRepository;
         this.whatsappService = whatsappService;
     }
     async processSettlements() {
@@ -148,53 +151,79 @@ let AdminService = class AdminService {
         promo.isVerified = isVerified;
         return this.promotionRepository.save(promo);
     }
-    async getDashboardStats() {
-        const totalHotels = await this.hotelRepository.count();
-        const totalTourPartners = await this.tourPartnerRepository.count();
-        const totalBusVendors = await this.busVendorRepository.count();
-        const totalCabVendors = await this.cabVendorRepository.count();
-        const hotelRevenue = await this.bookingRepository
+    async getDashboardStats(period) {
+        let startDate = null;
+        if (period && period !== 'all') {
+            const now = new Date();
+            if (period === 'today') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            }
+            else if (period === 'week') {
+                const day = now.getDay();
+                const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+                startDate = new Date(now.getFullYear(), now.getMonth(), diff);
+                startDate.setHours(0, 0, 0, 0);
+            }
+            else if (period === 'month') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+            }
+            else if (period === 'year' || period === 'fy') {
+                startDate = new Date(now.getFullYear(), 0, 1);
+            }
+        }
+        const dateCondition = startDate ? { createdAt: (0, typeorm_2.MoreThanOrEqual)(startDate) } : {};
+        const applyDateQb = (qb) => {
+            if (startDate) {
+                return qb.andWhere(`${qb.alias}.createdAt >= :startDate`, { startDate });
+            }
+            return qb;
+        };
+        const totalHotels = await this.hotelRepository.count(dateCondition);
+        const totalTourPartners = await this.tourPartnerRepository.count(dateCondition);
+        const totalBusVendors = await this.busVendorRepository.count(dateCondition);
+        const totalCabVendors = await this.cabVendorRepository.count(dateCondition);
+        const hotelRevenue = await applyDateQb(this.bookingRepository
             .createQueryBuilder('b')
-            .where('b.hotelId IS NOT NULL')
+            .where('b.hotelId IS NOT NULL'))
             .select('SUM(b.totalAmount)', 'sum')
             .getRawOne();
-        const packageRevenue = await this.bookingRepository
+        const packageRevenue = await applyDateQb(this.bookingRepository
             .createQueryBuilder('b')
-            .where('b.tourPartnerId IS NOT NULL')
+            .where('b.tourPartnerId IS NOT NULL'))
             .select('SUM(b.totalAmount)', 'sum')
             .getRawOne();
-        const busRevenue = await this.busBookingRepository
-            .createQueryBuilder('b')
+        const busRevenue = await applyDateQb(this.busBookingRepository
+            .createQueryBuilder('b'))
             .select('SUM(b.totalFare)', 'sum')
             .getRawOne();
-        const cabRevenue = await this.cabBookingRepository
-            .createQueryBuilder('b')
+        const cabRevenue = await applyDateQb(this.cabBookingRepository
+            .createQueryBuilder('b'))
             .select('SUM(b.totalAmount)', 'sum')
             .getRawOne();
         const hRev = parseFloat(hotelRevenue.sum || '0');
         const pRev = parseFloat(packageRevenue.sum || '0');
         const bRev = parseFloat(busRevenue.sum || '0');
         const cRev = parseFloat(cabRevenue.sum || '0');
-        const hBookingsCount = await this.bookingRepository.count({ where: { tourPartnerId: (0, typeorm_2.IsNull)() } });
-        const pBookingsCount = await this.bookingRepository.count({ where: { hotelId: (0, typeorm_2.IsNull)() } });
-        const bBookingsCount = await this.busBookingRepository.count();
-        const cBookingsCount = await this.cabBookingRepository.count();
-        const hConsumersRes = await this.bookingRepository
+        const hBookingsCount = await this.bookingRepository.count({ where: { tourPartnerId: (0, typeorm_2.IsNull)(), ...dateCondition } });
+        const pBookingsCount = await this.bookingRepository.count({ where: { hotelId: (0, typeorm_2.IsNull)(), ...dateCondition } });
+        const bBookingsCount = await this.busBookingRepository.count({ where: dateCondition });
+        const cBookingsCount = await this.cabBookingRepository.count({ where: dateCondition });
+        const hConsumersRes = await applyDateQb(this.bookingRepository
             .createQueryBuilder('b')
-            .where('b.tourPartnerId IS NULL')
+            .where('b.tourPartnerId IS NULL'))
             .select('COUNT(DISTINCT b.guestEmail)', 'count')
             .getRawOne();
-        const pConsumersRes = await this.bookingRepository
+        const pConsumersRes = await applyDateQb(this.bookingRepository
             .createQueryBuilder('b')
-            .where('b.hotelId IS NULL')
+            .where('b.hotelId IS NULL'))
             .select('COUNT(DISTINCT b.guestEmail)', 'count')
             .getRawOne();
-        const bConsumersRes = await this.busBookingRepository
-            .createQueryBuilder('b')
+        const bConsumersRes = await applyDateQb(this.busBookingRepository
+            .createQueryBuilder('b'))
             .select('COUNT(DISTINCT b.pnr)', 'count')
             .getRawOne();
-        const cConsumersRes = await this.cabBookingRepository
-            .createQueryBuilder('b')
+        const cConsumersRes = await applyDateQb(this.cabBookingRepository
+            .createQueryBuilder('b'))
             .select('COUNT(DISTINCT b.customerPhone)', 'count')
             .getRawOne();
         const hConsumers = parseInt(hConsumersRes.count || '0', 10);
@@ -290,6 +319,27 @@ let AdminService = class AdminService {
     }
     async deleteHotelRoom(id) {
         return this.roomTypeRepository.delete(id);
+    }
+    async createHotel(data) {
+        const hotel = this.hotelRepository.create({
+            ...data,
+            status: hotel_entity_1.HotelStatus.APPROVED,
+            isVerified: true,
+        });
+        return this.hotelRepository.save(hotel);
+    }
+    async deleteHotel(id) {
+        const hotel = await this.hotelRepository.findOne({ where: { id } });
+        if (!hotel)
+            throw new common_1.NotFoundException('Hotel not found');
+        await this.hotelRepository.delete(id);
+        return { success: true, message: 'Hotel deleted successfully' };
+    }
+    async getHotelReviews(hotelId) {
+        return this.reviewRepository.find({
+            where: { hotelId },
+            order: { createdAt: 'DESC' },
+        });
     }
     async findAllTourPartners(status) {
         const where = status ? { status } : {};
@@ -544,7 +594,9 @@ exports.AdminService = AdminService = __decorate([
     __param(12, (0, typeorm_1.InjectRepository)(vehicle_entity_1.Vehicle)),
     __param(13, (0, typeorm_1.InjectRepository)(global_setting_entity_1.GlobalSetting)),
     __param(14, (0, typeorm_1.InjectRepository)(ledger_entry_entity_1.LedgerEntry)),
+    __param(15, (0, typeorm_1.InjectRepository)(review_entity_1.Review)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,

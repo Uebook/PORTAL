@@ -53,8 +53,9 @@ export default function DataTable({
   return (
     <div className="admin-table-wrapper">
       {/* Table header row */}
+      {/* Table header row */}
       {(title || onSearch || headerAction) && (
-        <div className="admin-table-header">
+        <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between p-4 xl:p-5 border-b border-border gap-4">
           {/* Left: title + desc */}
           <div style={{ minWidth: 0 }}>
             {title && <div className="admin-table-title">{title}</div>}
@@ -62,14 +63,15 @@ export default function DataTable({
           </div>
 
           {/* Right: search + action */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
             {onSearch && (
-              <div className="table-search">
-                <Search size={13} style={{ color: 'hsl(var(--muted-foreground))', flexShrink: 0 }} />
+              <div className="relative flex-1 sm:flex-none sm:w-64">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
                   value={searchVal}
                   onChange={e => handleSearch(e.target.value)}
                   placeholder="Search..."
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-transparent rounded-xl py-2.5 pl-10 pr-4 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-foreground transition-all"
                 />
               </div>
             )}

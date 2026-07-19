@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 @source "../";
 @custom-variant dark (&:where(.dark, .dark *));
@@ -20,23 +20,23 @@
    Reference: School Management Admin style
    ============================================================ */
 :root {
-  --primary: 228 80% 55%;
+  --primary: 60 100% 25%; /* Olive/Gold primary accent */
   --primary-foreground: 0 0% 100%;
-  --background: 220 14% 96%;
+  --background: 40 33% 94%; /* Beige */
   --foreground: 220 25% 15%;
   --card: 0 0% 100%;
-  --card-hover: 220 14% 98%;
-  --border: 220 13% 88%;
-  --muted: 220 13% 92%;
-  --muted-foreground: 220 10% 50%;
-  --accent: 228 80% 55%;
+  --card-hover: 40 33% 98%;
+  --border: 40 20% 85%;
+  --muted: 40 20% 90%;
+  --muted-foreground: 220 10% 40%;
+  --accent: 60 100% 25%;
   --success: 142 70% 40%;
   --warning: 38 92% 50%;
   --destructive: 0 84% 55%;
-  --sidebar-width: 230px;
-  --sidebar-bg: #ffffff;
-  --topbar-bg: #ffffff;
-  --content-bg: #f3f4f7;
+  --sidebar-width: 240px;
+  --sidebar-bg: #1c3c34;
+  --topbar-bg: #f5f2eb;
+  --content-bg: #f5f2eb;
 }
 
 /* ============================================================
@@ -44,34 +44,23 @@
    NOT black — rich dark navy with blue tint
    ============================================================ */
 .dark {
-  /* Core colors — Slate theme matching the app */
-  --primary: 228 85% 65%;
+  --primary: 60 100% 25%;
   --primary-foreground: 0 0% 100%;
-
-  /* Page background: slate-950 */
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-
-  /* Cards: slate-900 */
-  --card: 222.2 47.4% 11.2%;
-  --card-hover: 222.2 47.4% 15%;
-
-  /* Borders: slate-800 */
-  --border: 217.2 32.6% 17.5%;
-
-  /* Muted surfaces: slate-800 */
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-
-  --accent: 228 85% 65%;
-  --success: 142 70% 45%;
+  --background: 40 33% 94%;
+  --foreground: 220 25% 15%;
+  --card: 0 0% 100%;
+  --card-hover: 40 33% 98%;
+  --border: 40 20% 85%;
+  --muted: 40 20% 90%;
+  --muted-foreground: 220 10% 40%;
+  --accent: 60 100% 25%;
+  --success: 142 70% 40%;
   --warning: 38 92% 50%;
-  --destructive: 0 84% 60%;
+  --destructive: 0 84% 55%;
 
-  /* Layout surfaces — transparent to let glassmorphism backdrop filter show through */
-  --sidebar-bg: transparent;
-  --topbar-bg: transparent;
-  --content-bg: transparent;
+  --sidebar-bg: #1c3c34;
+  --topbar-bg: #f5f2eb;
+  --content-bg: #f5f2eb;
 }
 
 /* ============================================================
@@ -89,13 +78,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dark mode ambient glow — matches login page blue/purple backdrop */
+/* Dark mode ambient glow removed for flat design */
 .dark body,
 body.dark {
-  background-image:
-    radial-gradient(ellipse at 15% 10%, rgba(37, 99, 235, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 85%, rgba(109, 40, 217, 0.10) 0%, transparent 50%);
-  background-attachment: fixed;
+  background-image: none;
+  background-attachment: scroll;
 }
 
 /* ============================================================
@@ -346,15 +333,13 @@ body.dark {
 }
 
 .dark .stat-card {
-  background: rgba(17, 24, 39, 0.45);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(255, 255, 255, 0.05);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
 }
 
 .dark .stat-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-color: hsl(var(--primary) / 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -381,12 +366,13 @@ body.dark {
 }
 
 .stat-card-value {
+  font-family: 'Playfair Display', serif;
   font-size: 26px;
   font-weight: 700;
   color: hsl(var(--foreground));
   line-height: 1;
   margin-bottom: 6px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .stat-card-sub {
@@ -654,10 +640,11 @@ body.dark {
 }
 
 .page-title {
-  font-size: 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
   font-weight: 700;
   color: hsl(var(--foreground));
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .page-subtitle {
@@ -676,10 +663,8 @@ body.dark {
 }
 
 .dark .card {
-  background: rgba(17, 24, 39, 0.45);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(255, 255, 255, 0.05);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
 }
 
 .card-header {
@@ -691,7 +676,8 @@ body.dark {
 }
 
 .card-title {
-  font-size: 14px;
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
   font-weight: 700;
   color: hsl(var(--foreground));
 }

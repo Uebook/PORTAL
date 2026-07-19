@@ -26,8 +26,8 @@ let AdminController = class AdminController {
     constructor(adminService) {
         this.adminService = adminService;
     }
-    getStats() {
-        return this.adminService.getDashboardStats();
+    getStats(period) {
+        return this.adminService.getDashboardStats(period);
     }
     processSettlements() {
         return this.adminService.processSettlements();
@@ -49,6 +49,15 @@ let AdminController = class AdminController {
     }
     updateHotelRoom(roomId, data) {
         return this.adminService.updateHotelRoom(roomId, data);
+    }
+    createHotel(data) {
+        return this.adminService.createHotel(data);
+    }
+    deleteHotel(id) {
+        return this.adminService.deleteHotel(id);
+    }
+    getHotelReviews(id) {
+        return this.adminService.getHotelReviews(id);
     }
     addHotelRoom(hotelId, data) {
         return this.adminService.addHotelRoom(hotelId, data);
@@ -129,8 +138,9 @@ let AdminController = class AdminController {
 exports.AdminController = AdminController;
 __decorate([
     (0, common_1.Get)('stats'),
+    __param(0, (0, common_1.Query)('period')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AdminController.prototype, "getStats", null);
 __decorate([
@@ -185,6 +195,28 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], AdminController.prototype, "updateHotelRoom", null);
+__decorate([
+    (0, common_1.Post)('hotels'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "createHotel", null);
+__decorate([
+    (0, common_1.Delete)('hotels/:id'),
+    (0, common_1.HttpCode)(200),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "deleteHotel", null);
+__decorate([
+    (0, common_1.Get)('hotels/:id/reviews'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "getHotelReviews", null);
 __decorate([
     (0, common_1.Post)('hotels/:id/rooms'),
     __param(0, (0, common_1.Param)('id')),

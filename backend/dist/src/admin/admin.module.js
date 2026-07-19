@@ -28,6 +28,7 @@ const bus_entity_1 = require("../buses/entities/bus.entity");
 const vehicle_entity_1 = require("../cabs/entities/vehicle.entity");
 const global_setting_entity_1 = require("../settings/entities/global-setting.entity");
 const ledger_entry_entity_1 = require("../finance/entities/ledger-entry.entity");
+const review_entity_1 = require("../hotel/entities/review.entity");
 let AdminModule = class AdminModule {
 };
 exports.AdminModule = AdminModule;
@@ -50,6 +51,7 @@ exports.AdminModule = AdminModule = __decorate([
                 vehicle_entity_1.Vehicle,
                 global_setting_entity_1.GlobalSetting,
                 ledger_entry_entity_1.LedgerEntry,
+                review_entity_1.Review,
             ]),
             support_module_1.SupportModule,
             whatsapp_module_1.WhatsappModule,
