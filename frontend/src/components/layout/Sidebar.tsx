@@ -271,7 +271,7 @@ export default function Sidebar() {
 
     return (
         <aside
-            className="flex flex-col h-full rounded-[28px] border border-border/20 shadow-sm transition-all duration-300 ios-spring bg-white/45 dark:bg-slate-900/30 backdrop-blur-2xl"
+            className="flex flex-col h-full rounded-[28px] border border-border/20 shadow-sm transition-all duration-300 ios-spring bg-[#f0ece3] dark:bg-[var(--sidebar-bg)] backdrop-blur-2xl"
             style={{
                 width: collapsed ? '80px' : '260px',
             }}
@@ -282,8 +282,8 @@ export default function Sidebar() {
                     className="flex items-center justify-center rounded-xl flex-shrink-0 transition-transform hover:scale-105 active:scale-95 duration-300 cursor-pointer"
                     style={{
                         width: 40, height: 40,
-                        background: 'linear-gradient(135deg, hsl(219 90% 50%), hsl(195 90% 45%))',
-                        boxShadow: '0 6px 20px rgba(37, 99, 235, 0.3)'
+                        background: 'linear-gradient(135deg, #cca35e, #b58c49)',
+                        boxShadow: '0 6px 20px rgba(204, 163, 94, 0.3)'
                     }}
                 >
                     {verticalPrefix === '/packages' ? (
@@ -342,14 +342,14 @@ export default function Sidebar() {
                                         href={item.href} 
                                         className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ios-spring ios-tap-scale no-underline ${
                                             isActive 
-                                                ? 'bg-blue-600 text-white shadow-[0_8px_20px_rgba(37,99,235,0.25)]' 
+                                                ? 'bg-[hsl(var(--accent))] text-white shadow-[0_8px_20px_rgba(204,163,94,0.25)]' 
                                                 : 'text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground'
                                         } ${collapsed ? 'justify-center px-0' : ''}`}
                                     >
                                         <item.icon size={18} className={`flex-shrink-0 transition-transform ${isActive ? 'scale-110' : ''}`} />
                                         {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
                                         {!collapsed && item.badge && (
-                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-white text-blue-600' : 'bg-blue-600/10 text-blue-600'}`}>{item.badge}</span>
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-white text-[hsl(var(--accent))]' : 'bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))]'}`}>{item.badge}</span>
                                         )}
                                     </Link>
                                 );
@@ -364,7 +364,7 @@ export default function Sidebar() {
                 <Link href={`${verticalPrefix}/profile`} className="flex-1 flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors no-underline">
                     <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold flex-shrink-0 shadow-sm text-white"
-                        style={{ background: 'linear-gradient(135deg, hsl(219 90% 50%), hsl(195 90% 45%))' }}
+                        style={{ background: 'linear-gradient(135deg, #cca35e, #b58c49)' }}
                     >
                         {user ? user.name.charAt(0).toUpperCase() : '?'}
                     </div>
