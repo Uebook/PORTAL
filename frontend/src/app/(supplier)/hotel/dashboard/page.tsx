@@ -274,45 +274,29 @@ export default function DashboardPage() {
             <div className="p-6 md:p-8 space-y-6 md:space-y-8 animate-fadeIn max-w-[1600px] mx-auto">
 
                 {/* Sub Header / Control panel widget */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 rounded-3xl bg-white/40 dark:bg-slate-900/30 backdrop-blur-xl border border-border/10 gap-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border gap-4">
                     <div>
                         <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">Current Date</div>
                         <div className="text-sm font-extrabold text-foreground">{currentDate || 'Loading date...'}</div>
                     </div>
                 </div>
 
-                {/* Stats Grid - iOS Widgets Style */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-                    {stats.map((stat) => (
-                        <div 
-                            key={stat.label} 
-                            className={`ios-platter p-5 rounded-[24px] flex flex-col justify-between hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 group cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.01)] border ${stat.glow}`}
-                            style={{
-                                background: 'linear-gradient(135deg, var(--card-bg-start, rgba(255,255,255,0.05)), var(--card-bg-end, rgba(255,255,255,0.02)))',
-                                backdropFilter: 'blur(20px)',
-                            }}
-                        >
-                            <div className="flex items-start justify-between mb-4">
-                                <div className="p-2.5 rounded-2xl flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.04)]" style={{ background: stat.bg }}>
-                                    <stat.icon size={16} style={{ color: stat.color }} />
-                                </div>
-                                <Sparkline points={stat.sparklinePoints} color={stat.color} />
-                            </div>
+                {/* Stat Cards Grid exactly like Admin */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+                    {stats.map((stat, i) => (
+                        <div key={i} className="stat-card">
                             <div>
-                                <div className="text-xs font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1.5">{stat.label}</div>
-                                <div className="text-xl md:text-2xl font-black tracking-tight text-foreground leading-none">
-                                    <AnimatedNumber value={stat.value} />
+                                <div className="stat-card-label">{stat.label}</div>
+                                <div className="stat-card-value">
+                                    {isLoading ? (
+                                        <div style={{ width: 80, height: 28, background: 'hsl(var(--muted))', borderRadius: 6, animation: 'pulse 1.5s infinite' }} />
+                                    ) : <AnimatedNumber value={stat.value} />}
                                 </div>
-                                <div className="flex items-center justify-between mt-3 pt-2 border-t border-black/5 dark:border-white/5">
-                                    <div className="text-[10px] font-bold" style={{ color: stat.up ? 'hsl(142 71% 45%)' : stat.up === null ? 'hsl(var(--muted-foreground))' : 'hsl(0 84% 60%)' }}>
+                                <div className="stat-card-sub" style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                                    <span className={`stat-badge ${stat.up === true ? 'stat-badge-up' : stat.up === false ? 'stat-badge-down' : 'bg-slate-500/10 text-slate-500'}`}>
+                                        {stat.up === true ? <TrendingUp size={10} /> : stat.up === false ? <ArrowDownRight size={10} /> : <span />}
                                         {stat.change}
-                                    </div>
-                                    {stat.up !== null && (
-                                        <div className={`flex items-center gap-0.5 text-[10px] font-extrabold ${stat.up ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                            {stat.up ? '+' : '-'}
-                                            {stat.up ? <ArrowUpRight size={10} className="stroke-[3.5]" /> : <ArrowDownRight size={10} className="stroke-[3.5]" />}
-                                        </div>
-                                    )}
+                                    </span>
                                 </div>
                             </div>
                         </div>

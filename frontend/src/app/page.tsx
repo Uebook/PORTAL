@@ -322,11 +322,11 @@ export default function LandingPage() {
                     <s.icon size={24} color="white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-bold text-[hsl(var(--foreground))] mb-1 text-base flex justify-between items-center">
+                    <div className="font-bold text-white mb-1 text-base flex justify-between items-center">
                       <span>{s.name}</span>
                       {!s.active && <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase tracking-wider whitespace-nowrap ml-2">Coming Soon</span>}
                     </div>
-                    <div className="text-xs text-[hsl(var(--muted-foreground))] line-clamp-2 leading-relaxed">{s.description}</div>
+                    <div className="text-xs text-white/70 line-clamp-2 leading-relaxed">{s.description}</div>
                   </div>
                 </Link>
               ))}

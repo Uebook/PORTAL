@@ -908,3 +908,25 @@ body.dark {
 .dark .ios-platter, .dark .ios-sheet { background: hsl(var(--card)); }
 .ios-spring { transition: all 0.2s ease; }
 .ios-tap-scale:active { transform: scale(0.97); }
+/* Override transparent supplier components to match Admin theme */
+.ios-platter {
+  background: white !important;
+  border-radius: 16px !important;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.dark .ios-platter {
+  background: hsl(var(--card)) !important;
+}
+
+.glass-card {
+  background: white !important;
+  border-radius: 12px !important;
+  border: 1px solid hsl(var(--border)) !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.dark .glass-card {
+  background: hsl(var(--card)) !important;
+}

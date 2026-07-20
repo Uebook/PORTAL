@@ -134,7 +134,7 @@ export default function PropertyPage() {
                 {/* Details Tab */}
                 {activeTab === 'details' && (
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 animate-fadeIn">
-                        <div className="glass-card p-6 space-y-4">
+                        <div className="card p-6 space-y-4">
                             <h3 className="font-semibold text-[hsl(var(--foreground))]">Basic Information</h3>
                             <div>
                                 <label className="text-xs font-medium text-[hsl(var(--foreground))] mb-1.5 block">Hotel Name</label>
@@ -171,7 +171,7 @@ export default function PropertyPage() {
                             </div>
                         </div>
 
-                        <div className="glass-card p-6 space-y-4">
+                        <div className="card p-6 space-y-4">
                             <h3 className="font-semibold text-[hsl(var(--foreground))]">Location</h3>
                             {/* Map placeholder */}
                             <div className="rounded-xl overflow-hidden flex items-center justify-center" style={{ height: 200, background: 'var(--glass-border-light)', border: '1px solid var(--glass-border-light)' }}>
@@ -211,7 +211,7 @@ export default function PropertyPage() {
 
                 {/* Policies Tab */}
                 {activeTab === 'policies' && (
-                    <div className="glass-card p-6 space-y-5 animate-fadeIn">
+                    <div className="card p-6 space-y-5 animate-fadeIn">
                         <h3 className="font-semibold text-[hsl(var(--foreground))]">Hotel Policies</h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                             <div>
@@ -263,7 +263,7 @@ export default function PropertyPage() {
 
                 {/* Amenities Tab */}
                 {activeTab === 'amenities' && (
-                    <div className="glass-card p-6 animate-fadeIn">
+                    <div className="card p-6 animate-fadeIn">
                         <div className="flex items-center justify-between mb-5">
                             <h3 className="font-semibold text-[hsl(var(--foreground))]">Amenities ({selectedAmenities.length} selected)</h3>
                         </div>
@@ -292,7 +292,7 @@ export default function PropertyPage() {
 
                 {/* Images Tab */}
                 {activeTab === 'images' && (
-                    <div className="glass-card p-6 space-y-4 animate-fadeIn">
+                    <div className="card p-6 space-y-4 animate-fadeIn">
                         <h3 className="font-semibold text-[hsl(var(--foreground))]">Property Photos</h3>
                         <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
                             Upload high-resolution images of your property. These images will be featured on the customer-facing website listing.
