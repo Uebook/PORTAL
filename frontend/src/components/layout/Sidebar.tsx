@@ -271,13 +271,17 @@ export default function Sidebar() {
 
     return (
         <aside
-            className="flex flex-col h-full rounded-[28px] border border-border/20 shadow-sm transition-all duration-300 ios-spring bg-[#f0ece3] dark:bg-[var(--sidebar-bg)] backdrop-blur-2xl"
+            className="flex flex-col h-full shadow-lg transition-all duration-300"
             style={{
                 width: collapsed ? '80px' : '260px',
+                minWidth: collapsed ? '80px' : '260px',
+                backgroundColor: '#14352b',
+                color: '#fff',
+                zIndex: 40
             }}
         >
             {/* Logo */}
-            <div className={`flex items-center gap-3 py-6 border-b border-border/10 ${collapsed ? 'justify-center px-0' : 'px-5'}`}>
+            <div className={`flex items-center gap-3 py-6 border-b border-white/10 ${collapsed ? 'justify-center px-0' : 'px-5'}`}>
                 <div
                     className="flex items-center justify-center rounded-xl flex-shrink-0 transition-transform hover:scale-105 active:scale-95 duration-300 cursor-pointer"
                     style={{
@@ -298,14 +302,19 @@ export default function Sidebar() {
                 </div>
                 {!collapsed && (
                     <div className="flex-1 min-w-0">
-                        <div className="font-extrabold text-sm text-[hsl(var(--foreground))] tracking-tight leading-tight truncate">TolidayTrip</div>
-                        <div className="text-[10px] uppercase font-bold tracking-wider mt-0.5" style={{ color: 'hsl(var(--accent))' }}>Extranet Portal</div>
+                        <div className="text-[18px] font-[700] tracking-tight leading-none truncate" style={{ color: '#cca35e', fontFamily: '"Playfair Display", serif' }}>Toliday</div>
+                        <div className="text-[15px] font-[600] tracking-tight mt-0.5 leading-none" style={{ color: '#cca35e', fontFamily: '"Playfair Display", serif' }}>Extranet</div>
                     </div>
                 )}
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className={`p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${collapsed ? 'absolute -right-3 top-8 border border-border/20 bg-white dark:bg-slate-900 z-50 shadow-md' : 'ml-auto'}`}
-                    style={{ color: 'hsl(var(--muted-foreground))' }}
+                    className={`p-1.5 rounded-lg transition-colors ${collapsed ? 'absolute -right-3 top-8 border border-white/10 shadow-md' : 'ml-auto'}`}
+                    style={{ 
+                        color: 'rgba(255,255,255,0.7)', 
+                        backgroundColor: collapsed ? '#14352b' : 'transparent',
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = collapsed ? '#14352b' : 'transparent'; }}
                 >
                     <ChevronDown
                         size={14}
@@ -316,9 +325,9 @@ export default function Sidebar() {
             </div>
 
             {!collapsed && user && (
-                <div className="mx-4 mt-4 px-4 py-2.5 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-border/10">
-                    <div className="text-xs font-bold text-[hsl(var(--foreground))] truncate">{user.hotel_name || user.businessName || 'Business Name'}</div>
-                    <div className="text-[10px] font-semibold mt-0.5 text-muted-foreground">
+                <div className="mx-4 mt-4 px-4 py-2.5 rounded-xl border border-white/10" style={{ backgroundColor: 'rgba(0,0,0,0.15)' }}>
+                    <div className="text-xs font-bold text-white truncate">{user.hotel_name || user.businessName || 'Business Name'}</div>
+                    <div className="text-[10px] font-semibold mt-0.5 text-white/60">
                         {(verticalPrefix === '/packages') ? 'Partner ID' : 'Hotel ID'}: <span className="font-mono">{user.hotel_id || user.tour_partner_id}</span>
                     </div>
                 </div>
@@ -329,7 +338,7 @@ export default function Sidebar() {
                 {navGroups.map((group) => (
                     <div key={group.label} className="space-y-1">
                         {!collapsed && (
-                            <div className="px-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
+                            <div className="px-3 text-[10px] font-bold uppercase tracking-widest text-white/50 mb-2">
                                 {group.label}
                             </div>
                         )}
@@ -340,16 +349,29 @@ export default function Sidebar() {
                                     <Link 
                                         key={item.href} 
                                         href={item.href} 
-                                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ios-spring ios-tap-scale no-underline ${
-                                            isActive 
-                                                ? 'bg-[hsl(var(--accent))] text-white shadow-[0_8px_20px_rgba(204,163,94,0.25)]' 
-                                                : 'text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground'
-                                        } ${collapsed ? 'justify-center px-0' : ''}`}
+                                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all no-underline ${collapsed ? 'justify-center px-0' : ''}`}
+                                        style={{
+                                            fontWeight: isActive ? 600 : 500,
+                                            color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
+                                            backgroundColor: isActive ? 'rgba(204,163,94,0.15)' : 'transparent',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (!isActive) {
+                                                e.currentTarget.style.color = '#fff';
+                                                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (!isActive) {
+                                                e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
+                                                e.currentTarget.style.backgroundColor = 'transparent';
+                                            }
+                                        }}
                                     >
                                         <item.icon size={18} className={`flex-shrink-0 transition-transform ${isActive ? 'scale-110' : ''}`} />
                                         {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
                                         {!collapsed && item.badge && (
-                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-white text-[hsl(var(--accent))]' : 'bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))]'}`}>{item.badge}</span>
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-[#cca35e] text-white' : 'bg-white/10 text-white/70'}`}>{item.badge}</span>
                                         )}
                                     </Link>
                                 );
@@ -360,8 +382,11 @@ export default function Sidebar() {
             </nav>
 
             {/* User footer */}
-            <div className="p-3 border-t border-border/10 flex items-center gap-2">
-                <Link href={`${verticalPrefix}/profile`} className="flex-1 flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors no-underline">
+            <div className="p-3 border-t border-white/10 flex items-center gap-2">
+                <Link href={`${verticalPrefix}/profile`} className="flex-1 flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer transition-colors no-underline"
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                >
                     <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold flex-shrink-0 shadow-sm text-white"
                         style={{ background: 'linear-gradient(135deg, #cca35e, #b58c49)' }}
@@ -370,14 +395,14 @@ export default function Sidebar() {
                     </div>
                     {!collapsed && user && (
                         <div className="flex-1 min-w-0">
-                            <div className="text-xs font-bold text-[hsl(var(--foreground))] truncate leading-none">{user.name}</div>
-                            <div className="text-[10px] uppercase font-bold text-muted-foreground mt-1 leading-none">{user.role}</div>
+                            <div className="text-xs font-bold text-white truncate leading-none">{user.name}</div>
+                            <div className="text-[10px] uppercase font-bold text-white/60 mt-1 leading-none">{user.role}</div>
                         </div>
                     )}
                     {!collapsed && !user && (
                         <div className="flex-1 min-w-0">
-                            <div className="text-xs font-bold text-[hsl(var(--foreground))] truncate leading-none">Guest</div>
-                            <div className="text-[10px] uppercase font-bold text-muted-foreground mt-1 leading-none">Offline</div>
+                            <div className="text-xs font-bold text-white truncate leading-none">Guest</div>
+                            <div className="text-[10px] uppercase font-bold text-white/60 mt-1 leading-none">Offline</div>
                         </div>
                     )}
                 </Link>
@@ -385,8 +410,10 @@ export default function Sidebar() {
                     {!collapsed && <ThemeToggle />}
                     <button
                         onClick={handleLogout}
-                        className={`p-2 rounded-xl hover:bg-red-500/10 text-red-500 transition-colors ios-tap-scale ${collapsed ? 'mx-auto' : ''}`}
+                        className={`p-2 rounded-xl text-red-400 transition-colors ${collapsed ? 'mx-auto' : ''}`}
                         title="Logout"
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239,68,68,0.1)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                     >
                         <LogOut size={16} />
                     </button>

@@ -273,13 +273,6 @@ export default function DashboardPage() {
             <Topbar title="Dashboard Overview" subtitle="Welcome back, here's what's happening today" />
             <div className="p-6 md:p-8 space-y-6 md:space-y-8 animate-fadeIn max-w-[1600px] mx-auto">
 
-                {/* Sub Header / Control panel widget */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 rounded-3xl bg-white dark:bg-slate-900 border border-border gap-4">
-                    <div>
-                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">Current Date</div>
-                        <div className="text-sm font-extrabold text-foreground">{currentDate || 'Loading date...'}</div>
-                    </div>
-                </div>
 
                 {/* Stat Cards Grid exactly like Admin */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>

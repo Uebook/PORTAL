@@ -57,19 +57,15 @@ export default function BookingsPage() {
 
                 {/* Tab + Search row */}
                 <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--glass-border-light)', border: '1px solid var(--glass-border-light)' }}>
+                    <div className="period-pills">
                         {tabs.map((t) => (
                             <button
                                 key={t.key}
                                 onClick={() => setActiveTab(t.key)}
-                                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all"
-                                style={{
-                                    background: activeTab === t.key ? 'var(--glass-border)' : 'transparent',
-                                    color: activeTab === t.key ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
-                                }}
+                                className={`period-pill ${activeTab === t.key ? 'active' : ''} flex items-center gap-1.5`}
                             >
                                 {t.label}
-                                <span className="px-1.5 py-0.5 rounded-full text-[10px]" style={{ background: 'var(--glass-border)' }}>
+                                <span className="px-1.5 py-0.5 rounded-full text-[10px]" style={{ background: activeTab === t.key ? 'var(--glass-border)' : 'var(--glass-border-light)' }}>
                                     {counts[t.key] || 0}
                                 </span>
                             </button>
@@ -85,7 +81,7 @@ export default function BookingsPage() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <Link href="/hotel/bookings/add">
-                            <button className="btn-primary flex items-center gap-2 px-4 py-2 text-sm font-bold">
+                            <button className="btn-primary flex items-center gap-2">
                                 <Plus size={16} /> Add Booking
                             </button>
                         </Link>
@@ -93,7 +89,7 @@ export default function BookingsPage() {
                 </div>
 
                 {/* Table */}
-                <div className="glass-card overflow-hidden">
+                <div className="card overflow-hidden">
                     {isLoading ? (
                         <div className="py-20 flex justify-center">
                             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[hsl(var(--accent))]"></div>
