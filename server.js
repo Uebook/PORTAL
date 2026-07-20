@@ -1,7 +1,7 @@
 const { createServer } = require('http');
 const { parse } = require('url');
 const path = require('path');
-const next = require('./frontend/node_modules/next');
+const next = require('next');
 
 const dev = process.env.NODE_ENV !== 'production';
 const dir = path.join(__dirname.toLowerCase(), 'frontend'); // Force lowercase path resolution to match Windows filesystem casing
