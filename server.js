@@ -2,8 +2,9 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
+const path = require('path');
 const dev = process.env.NODE_ENV !== 'production';
-const dir = __dirname.toLowerCase(); // Force lowercase path resolution to match Windows filesystem casing
+const dir = path.join(__dirname.toLowerCase(), 'frontend'); // Force lowercase path resolution to match Windows filesystem casing
 const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 
