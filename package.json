@@ -13,5 +13,10 @@
     "build:frontend": "npm run build -w frontend",
     "build:backend": "npm run build -w backend",
     "build:website": "npm run build -w website"
+  },
+  "dependencies": {
+    "next": "15.1.4",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   }
 }
